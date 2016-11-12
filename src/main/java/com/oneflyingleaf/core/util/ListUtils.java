@@ -56,6 +56,8 @@ public class ListUtils {
 	 * @return
 	 */
 	public static Map<String ,String> cookieListToMap(List<Cookie> cookies){
+		if(cookies == null) return null;
+		
 		Map<String ,String > map = new HashMap<String,String>();
 		for(Cookie cookie : cookies){
 			map.put(cookie.getName(), cookie.getValue());

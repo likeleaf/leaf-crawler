@@ -74,7 +74,10 @@ public class Site {
 	 * @return 添加页后的site
 	 */
 	public Site addPage(Page page){
-		return addPage(page);
+		
+		this.pages.add(page);
+		
+		return this;
 	}
 	
 	/**
@@ -102,7 +105,10 @@ public class Site {
 	 * @return 删除后的site
 	 */
 	public Site removePage(Page page){
-		return removePages(page);
+		
+		this.pages.remove(page);
+		
+		return this;
 	}
 	
 	/**
@@ -132,7 +138,16 @@ public class Site {
 		if(ListUtils.isEmpty(this.pages)){
 			throw new NullPointerException("未添加Page");
 		}
-		Document document =  Jsoup.connect(url.toString()).cookies(ListUtils.cookieListToMap(this.cookies)).get();
+		
+		Map<String,String> map = ListUtils.cookieListToMap(this.cookies);
+
+		Connection connect = Jsoup.connect(url.toString());
+		Document document = null;
+		if(map !=  null ){
+			document =  connect.cookies(map).get();
+		}else{
+			document = connect.get();
+		}
 		
 		/*HttpGet httpGet = new HttpGet(this.url);
 		
@@ -140,7 +155,7 @@ public class Site {
 		
 		
 		for(Page page : this.pages){
-			page.execute(new Html().setDocument(document)).save();
+			page.execute(new Html().setDocument(document));
 		}
 	}
 	

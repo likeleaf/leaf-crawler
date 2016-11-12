@@ -1,5 +1,7 @@
 package com.oneflyingleaf.core.page;
 
+import org.jsoup.nodes.Document;
+
 import com.oneflyingleaf.core.html.Html;
 import com.oneflyingleaf.core.pipeline.Pipeline;
 
@@ -8,7 +10,7 @@ public interface Page {
 	/**
 	 * 执行页面处理的内容
 	 */
-	Page execute(Html html);
+	void execute(Html html);
 	
 	/**
 	 * 添加管道
@@ -23,8 +25,10 @@ public interface Page {
 	Page removePipeline(Pipeline... Pipeline);
 	
 	/**
-	 * 保存信息
+	 * 解析需要保存的内容
+	 * @param documnt
+	 * @return 最终需要返回的内容
 	 */
-	Page save();
+	<T> T parse(Document documnt);
 	
 }

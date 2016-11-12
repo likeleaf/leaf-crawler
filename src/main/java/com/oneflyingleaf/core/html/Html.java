@@ -9,4 +9,9 @@ public class Html {
 		this.document = document;
 		return this;
 	}
+	
+	public Document getDocument(){
+		
+		return this.document;
+	}
 }
