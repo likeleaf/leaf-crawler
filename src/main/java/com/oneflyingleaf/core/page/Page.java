@@ -31,4 +31,18 @@ public interface Page {
 	 */
 	<T> T parse(Document documnt);
 	
+	
+	/**
+	 * 页面匹配的url正则
+	 * @param rege
+	 * @return
+	 */
+	boolean matchReg(String url);
+	
+	/**
+	 * 添加正则
+	 * @param reg
+	 * @return
+	 */
+	Page addReg(String reg);
 }

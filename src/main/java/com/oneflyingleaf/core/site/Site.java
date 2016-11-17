@@ -18,17 +18,20 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import com.oneflyingleaf.core.context.LifeCycle;
 import com.oneflyingleaf.core.html.Html;
 import com.oneflyingleaf.core.page.Page;
+import com.oneflyingleaf.core.util.ConfigUtils;
 import com.oneflyingleaf.core.util.ListUtils;
 
 
-public class Site {
+public class Site implements LifeCycle{
 	
 	private URI url = null;
 	private HttpClient httpClient = null;
 	private List<Page> pages = new LinkedList<Page>();
 	private List<Cookie> cookies = null;
+	private boolean parrernOne = false;
 	
 	public Site(URI url){
 		this.url = url;
@@ -143,6 +146,7 @@ public class Site {
 
 		Connection connect = Jsoup.connect(url.toString());
 		Document document = null;
+		
 		if(map !=  null ){
 			document =  connect.cookies(map).get();
 		}else{
@@ -155,8 +159,18 @@ public class Site {
 		
 		
 		for(Page page : this.pages){
-			page.execute(new Html().setDocument(document));
+			if(page.matchReg(url.getPath())){
+				page.execute(new Html().setDocument(document));
+				
+				if(parrernOne) break;
+			}
 		}
+		
+	}
+
+	@Override
+	public void init() {
+		parrernOne = ConfigUtils.defaultSitePatternOne();
 	}
 	
 }

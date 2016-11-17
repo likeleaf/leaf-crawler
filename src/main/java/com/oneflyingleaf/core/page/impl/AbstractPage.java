@@ -1,21 +1,37 @@
 package com.oneflyingleaf.core.page.impl;
 
 
+import java.util.regex.Pattern;
+
 import org.jsoup.nodes.Document;
 
+import com.oneflyingleaf.core.context.CrawlerContext;
+import com.oneflyingleaf.core.context.LifeCycle;
 import com.oneflyingleaf.core.html.Html;
 import com.oneflyingleaf.core.page.Page;
 import com.oneflyingleaf.core.pipeline.Pipeline;
 import com.oneflyingleaf.core.util.CommonUtils;
 
-public abstract class AbstractPage implements Page {
+public abstract class AbstractPage implements Page,LifeCycle {
 	
 	/**已使用的pipeline的数量*/
 	private int pipelineUsed = 0;
 	
 	protected Object[] pipeline = null;
 	
+	protected String reg = null;
+	
 	private final int pipelineIncrease = 5;
+	
+	/*页面url匹配正则**/
+	private Pattern  pattern = null;
+	
+	private boolean defaultPageRegular = false;
+	
+	public void init(){
+		defaultPageRegular = CrawlerContext.defaultPageRegular();
+		
+	}
 
 	
 	public void execute(Html html){
@@ -34,6 +50,8 @@ public abstract class AbstractPage implements Page {
 		}
 	}
 
+	
+	
 	public Page addPipeline(Pipeline... pipelines) {
 		pipeline = new Object[5];
 		
@@ -57,7 +75,11 @@ public abstract class AbstractPage implements Page {
 		return this;
 	}
 
+	
+	
 	public abstract <T> T parse(Document document);
+	
+	
 	
 	public Page removePipeline(Pipeline... pipelines) {
 		int tempUsed = pipelineUsed;
@@ -87,5 +109,15 @@ public abstract class AbstractPage implements Page {
 		
 		return this;
 	}
+	
+	public Page addReg(String reg){
+		pattern = Pattern.compile(reg);
+		return this;
+	}
 
+	public boolean matchReg(String url){
+		if(pattern == null) return defaultPageRegular;
+		
+		return pattern.matcher(url).matches();
+	}
 }
